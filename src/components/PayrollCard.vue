@@ -8,9 +8,9 @@
             <th>Final Salary</th>
         </tr> -->
         <tr>
-            <td>eesufhiauid</td>
-            <td>asdasdais</td>
-            <td>{{ info.finalSalary / info.hoursWorked }} </td>
+            <td>{{ personal_info.name }}</td>
+            <td>{{ personal_info.position }}</td>
+            <td>{{ (info.finalSalary / info.hoursWorked).toFixed(2) }} </td>
             <td>{{ info.hoursWorked }}</td>
             <td>{{ info.leaveDeductions }}</td>
             <td> {{ info.finalSalary }} </td>

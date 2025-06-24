@@ -2,9 +2,6 @@
     <navbar-comp/>
     <div>
         <h1>Employment Page</h1>
-        <div>
-            <h2>Add an Employee</h2>
-        </div>
         <EmployeeCard v-for="employer in $store.state.employee_info" :info="employer"/>
     </div>
 </template>
