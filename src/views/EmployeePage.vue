@@ -4,14 +4,17 @@
         <h1>Employment Page</h1>
         <EmployeeCard v-for="employer in $store.state.employee_info" :info="employer"/>
     </div>
+    <footer-comp/>
 </template>
 <script>
 import EmployeeCard from '@/components/EmployeeCard.vue';
 import NavbarComp from '@/components/NavbarComp.vue';
+import FooterComp from '@/components/FooterComp.vue';
 export default{
     components : {
         EmployeeCard,
-        NavbarComp
+        NavbarComp,
+        FooterComp
     }
 }
 </script>

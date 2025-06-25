@@ -79,14 +79,17 @@
       </section>
     </main>
   </div>
+  <footer-comp/>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import NavbarComp from '@/components/NavbarComp.vue'
+import FooterComp from '@/components/FooterComp.vue'
 
 components : [
-  NavbarComp
+  NavbarComp,
+  FooterComp
 ]
 
 // Mock data

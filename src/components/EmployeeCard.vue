@@ -28,7 +28,7 @@ export default {
     ]
 }
 </script>
-<style scoped>
+<style>
     .employee-card {
     background-color: #F7EFEF;
     border-radius: 12px;

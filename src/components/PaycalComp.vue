@@ -11,11 +11,11 @@
         </div>
         <div class="results">
             <div class="result-card">
-                <h3 v-if="showResults">Pay</h3>
-                <p v-if="showResults"> 
-                    <b v-if="showResults">Weekly</b> : R{{ formatCurrency(weeklyPay) }}   
-                    <b v-if="showResults">Monthly</b> : R{{ formatCurrency(monthlyPay) }}   
-                    <b v-if="showResults">Yearly</b> : R{{ formatCurrency(yearlyPay) }}
+                <h3 >Pay</h3>
+                <p> 
+                    <b >Weekly</b> : R{{ formatCurrency(weeklyPay) }} |  
+                    <b >Monthly</b> : R{{ formatCurrency(monthlyPay) }} | 
+                    <b >Yearly</b> : R{{ formatCurrency(yearlyPay) }}
                 </p>
             </div>
         </div>

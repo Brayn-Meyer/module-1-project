@@ -3,6 +3,8 @@ import AboutView from '../views/AboutView.vue'
 import HomeView from '../views/HomeView.vue'
 import EmployeeView from '@/views/EmployeePage.vue'
 import PayrollView from '@/views/PayrollView.vue'
+import AttendanceView from '@/views/AttendanceView.vue'
+import LeaveRequestView from '@/views/LeaveRequest.vue'
 import LoginView from '@/views/LoginView.vue'
 
 
@@ -31,7 +33,17 @@ const routes = [
     path: '/payroll',
     name: 'payroll',
     component: PayrollView
-  }
+  },
+  {
+    path: '/attendance',
+    name: 'attendance',
+    component: AttendanceView
+  },
+  {
+    path: '/leaverequest',
+    name: 'leaverequest',
+    component: LeaveRequestView
+  },
 ]
 
 const router = createRouter({
