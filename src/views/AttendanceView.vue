@@ -2,7 +2,7 @@
     <navbar-comp/>
     <div>
         <!-- <EmployeeCard v-for="employer in $store.state.employee_info" :info="employer"/> -->
-        <attendance-card v-for="employee in $store.state.attendance" :info="employee"/>
+        <!-- <attendance-card v-for="employee in $store.state.attendance" :info="employee"/> -->
     </div>
     <footer-comp/>
 </template>

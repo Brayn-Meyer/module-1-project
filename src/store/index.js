@@ -537,7 +537,7 @@ export default createStore({
         update_to_leave_requests() {
             for (i in this.$store.state.attendance){
                 if (i.leaveRequests !== undefined){
-                    this.state.leave_requests.push(i.leaveRequests)
+                    this.$store.state.leave_requests.push(i.leaveRequests)
                 }
             }
         }

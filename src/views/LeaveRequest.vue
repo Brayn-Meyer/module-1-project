@@ -1,7 +1,7 @@
 <template>
     <navbar-comp/>
     <!-- <leaverequest-comp v-for="employee in $store.state.attendance" :info="employee"/> -->
-    {{ $store.state.leave_requests }}
+    <!-- {{ $store.state.leave_requests }} -->
     <footer-comp/>
 </template>
 <script>

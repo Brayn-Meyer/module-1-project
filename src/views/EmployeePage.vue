@@ -1,10 +1,17 @@
 <template>
     <navbar-comp/>
     <div>
+        <div class="employee-page">
+    <navbar-comp/>
+    <div class="page-content">
         <h1>Employment Page</h1>
+        <div class="employee-grid">
         <EmployeeCard v-for="employer in $store.state.employee_info" :info="employer"/>
+        </div>
+        </div>
     </div>
     <footer-comp/>
+    </div>
 </template>
 <script>
 import EmployeeCard from '@/components/EmployeeCard.vue';
@@ -19,62 +26,36 @@ export default{
 }
 </script>
 <style>
-.employee-card {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 20px;
-    width: 300px;
+.employee-page {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
 }
-.card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.page-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
-.initials {
-    background-color: #2E86DE;
-    color: white;
-    font-weight: bold;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
+h1 {
+    color: #2C3E50;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
 }
-.employee-info {
-    font-size: 12px;
-    color: gray;
+.employee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
 }
-.card-body .label {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 2px;
-}
-.card-body .value {
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-.card-action {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-.more-btn {
-    background-color: #E8F4FF;
-    border: none;
-    padding: 8px 12px;
-    font-size: 13px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-.more-btn:hover {
-    background-color: #D0EAFF;
+@media (max-width: 768px) {
+    .page-content {
+        padding: 1rem;
+    }
+    .employee-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
