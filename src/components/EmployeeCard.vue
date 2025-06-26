@@ -1,166 +1,132 @@
 <template>
     <div class="employee-card">
         <div class="card-header">
-            <h3>{{ info.name }}</h3>
-            <hr>
-        </div>
-        <div class="card-body">
-            <p class="position"><strong>Position:</strong> {{ info.position }}</p>
-            <div v-if="showDetails" class="details">
-                <hr>
-                <div class="detail-item">
-                    <span class="label"><strong>Department:</strong></span>
-                    <span class="value">{{ info.department }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label"><strong>Salary:</strong></span>
-                    <span class="value">R {{ info.salary.toLocaleString() }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label"><strong>Employment History:</strong></span>
-                    <span class="value">{{ info.employmentHistory }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label"><strong>Contact:</strong></span>
-                    <span class="value contact">{{ info.contact }}</span>
-                </div>
+            <div class="initials">{{ initials }}</div>
+            <div class="main-info">
+                <h2>{{ employee.name }}</h2>
+                <p class="subtitle"><strong>Position:</strong> {{ employee.position }} <br> <strong>Department:</strong>
+                    {{ employee.department }}</p>
             </div>
         </div>
-        <div class="card-action">
-            <button class="more-btn" @click="toggleDetails">
-                {{ showDetails ? 'View Less' : 'View More' }}
-            </button>
+        <div class="actions">
+            <button class="view" @click="$emit('view', employee)">View</button>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
         </div>
     </div>
 </template>
+
 <script>
 export default {
-    props: ['info'],
-    data() {
-        return {
-            showDetails: false,
-            borderColors: ['#4361EE', '#4CC9F0', '#F72585', '#F8961E']
+    props: ['employee'],
+    computed: {
+        initials() {
+            return this.employee.name
+                .split(' ')
+                .map(word => word[0])
+                .join('')
+                .toUpperCase()
         }
     },
     methods: {
-        toggleDetails() {
-            this.showDetails = !this.showDetails;
-        },
-        getBorderColor(index) {
-            return this.borderColors[index % this.borderColors.length];
+        openModal(employee) {
+            this.selectedEmployee = employee;
         }
     }
 }
 </script>
+
 <style scoped>
 .employee-card {
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 280px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.employee-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background-color: v-bind('getBorderColor(info.employeeId)');
-}
-
-strong {
-    color: black;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f5fbfe;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s;
+    border: 1px solid #075576;
+    gap: 20px;
 }
 
 .employee-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
 }
 
-.card-header h3 {
-    margin: 0;
-    color: #2C3E50;
-    font-size: 1.2rem;
-}
-
-.position {
-    color: #4361EE;
-    font-weight: 500;
-    margin: 8px 0 12px;
-}
-
-.details {
-    margin-top: 15px;
-}
-
-.detail-item {
-    margin-bottom: 10px;
+.card-header {
     display: flex;
-    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
 }
 
-.label {
-    font-size: 0.8rem;
-    color: #666;
-    font-weight: 500;
-}
-
-.value {
-    font-size: 0.9rem;
-    color: #333;
-    margin-top: 2px;
-}
-
-.contact {
-    word-break: break-all;
-}
-
-hr {
-    border: 0;
-    height: 1px;
-    background: #E0E0E0;
-    margin: 10px 0;
-}
-
-.more-btn {
-    background-color: #CC799D;
+.initials {
+    background-color: #075576;
     color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-weight: bold;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-info h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-info p {
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.subtitle {
+    margin: 4px 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    font-weight: bold;
     border: none;
-    padding: 10px 16px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    width: 100%;
-    margin-top: 10px;
-    font-weight: 500;
 }
 
-.more-btn:hover {
-    background-color: #E01B72;
-    /* Slightly darker pink */
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(242, 37, 133, 0.3);
+button:hover {
+    opacity: 0.85;
+    transform: scale(1.02);
 }
 
-.details {
-    animation: fadeIn 0.3s ease-out;
+.view {
+    background-color: #075576;
+    color: white;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
+.edit {
+    background-color: #a0bacc;
+    color: white;
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.delete {
+    background-color: #ef233c;
+    color: white;
 }
 </style>

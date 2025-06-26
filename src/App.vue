@@ -8,7 +8,7 @@
       // this.$store.dispatch('fetch_employee_info'),
       // this.$store.dispatch('fetch_attendance'),
       // this.$store.dispatch('fetch_payroll_data')
-      this.$store.commit('update_to_leave_requests')
+      // this.$store.commit('update_to_leave_requests')
     }
   }
 </script>

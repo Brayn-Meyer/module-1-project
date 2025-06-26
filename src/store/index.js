@@ -506,9 +506,6 @@ export default createStore({
                 finalSalary: 57750
             }
         ],
-        leave_requests: [
-
-        ]
     },
     getters: {
     },
@@ -516,15 +513,15 @@ export default createStore({
         update_employee_info(payload) {//payload is any info
             this.state.employee_info = payload
         },
-        add_to_employee_info(payload) {
-            this.state.employee_info.push(payload)
+        add_to_employee_info(state, payload) {
+            state.employee_info.push(payload)
         },
 
         update_attendance(payload) {//payload is any info
             this.state.attendance = payload
         },
-        add_to_attendance(payload) {
-            this.state.attendance.push(payload)
+        add_to_attendance(state, payload) {
+            state.attendance.push(payload)
         },
 
         update_payroll_data(payload) {//payload is any info
@@ -534,28 +531,25 @@ export default createStore({
             this.state.payroll_data.push(payload)
         },
 
-        update_to_leave_requests() {
-            for (i in this.$store.state.attendance){
-                if (i.leaveRequests !== undefined){
-                    this.$store.state.leave_requests.push(i.leaveRequests)
-                }
+        updateLeaveStatus(empIndex, reqIndex, newStatus) { //updates the status of leave requests by targeting via index
+            this.state.attendance[empIndex].leaveRequests[reqIndex].status = newStatus;
+            console.log(this.state.attendance[empIndex])
+        }
+        },
+        actions: {
+            async fetch_employee_info() {
+                let employees = await employee_info.json()
+                this.store.commit('update_employee_info', employees)
+            },
+            async fetch_attendance() {
+                let attendance = await attendance_info.json()
+                this.store.commit('update_attendance', attendance)
+            },
+            async fetch_payroll_data() {
+                let payroll = await payroll_info.json()
+                this.store.commit('add_to_payroll_data', payroll)
             }
-        }
-    },
-    actions: {
-        async fetch_employee_info() {
-            let employees = await employee_info.json()
-            this.store.commit('update_employee_info', employees)
         },
-        async fetch_attendance() {
-            let attendance = await attendance_info.json()
-            this.store.commit('update_attendance', attendance)
-        },
-        async fetch_payroll_data() {
-            let payroll = await payroll_info.json()
-            this.store.commit('add_to_payroll_data', payroll)
+        modules: {
         }
-    },
-    modules: {
-    }
-})
+    })

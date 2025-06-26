@@ -1,17 +1,19 @@
 <template>
     <navbar-comp/>
-    <!-- <leaverequest-comp v-for="employee in $store.state.attendance" :info="employee"/> -->
-    <!-- {{ $store.state.leave_requests }} -->
+    <addleaverequest-comp/>
+    <leaverequest-comp v-for="employee in $store.state.attendance" :info="employee"/>
     <footer-comp/>
 </template>
 <script>
 import NavbarComp from '@/components/NavbarComp.vue';
 import FooterComp from '@/components/FooterComp.vue';
 import LeaverequestComp from '@/components/LeaverequestComp.vue';
+import AddleaverequestComp from '@/components/AddleaverequestComp.vue';
 export default {
     components : {
         NavbarComp,
         LeaverequestComp,
+        AddleaverequestComp,
         FooterComp
     }
 }

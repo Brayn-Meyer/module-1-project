@@ -8,7 +8,7 @@
     <div class="wrapper">
         <form action="/home" method="t">
             <div class="imgcontainer">
-                <img src="@/assets/logo.png" alt="logo" class="logo">
+                <img src="@/assets/file_00000000c01861fdbdca8264e6d26d80.png" alt="logo" class="logo">
                 <h1>Welcome To ModernTech Solutions</h1>
             </div>
 
@@ -40,7 +40,7 @@ export default {
 </script>
 <style scoped>
 body{
-    background-image: url(https://img.freepik.com/premium-vector/modern-blue-dynamic-wave-pattern-background-design_768131-258.jpg?w=740);
+    background-color: whitesmoke;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -50,7 +50,6 @@ body{
 .wrapper{
     width: 400px;
     margin: 50px auto;
-    background-image: url(https://img.freepik.com/premium-vector/modern-blue-dynamic-wave-pattern-background-design_768131-258.jpg?w=740);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -98,7 +97,7 @@ button:hover {
 
 .imgcontainer {
     text-align: center;
-    padding: px;
+    
 }
 
 
