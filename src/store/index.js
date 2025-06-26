@@ -508,6 +508,14 @@ export default createStore({
         ],
     },
     getters: {
+        attendanceWithCurrentDate: state => {
+            return state.attendance.map(emp => ({
+                ...emp,
+                currentDate: emp.attendance && emp.attendance.length > 0
+                    ? emp.attendance[emp.attendance.length - 1].date
+                    : ''
+            }));
+        }
     },
     mutations: {
         update_employee_info(payload) {//payload is any info
@@ -535,21 +543,21 @@ export default createStore({
             this.state.attendance[empIndex].leaveRequests[reqIndex].status = newStatus;
             console.log(this.state.attendance[empIndex])
         }
+    },
+    actions: {
+        async fetch_employee_info() {
+            let employees = await employee_info.json()
+            this.store.commit('update_employee_info', employees)
         },
-        actions: {
-            async fetch_employee_info() {
-                let employees = await employee_info.json()
-                this.store.commit('update_employee_info', employees)
-            },
-            async fetch_attendance() {
-                let attendance = await attendance_info.json()
-                this.store.commit('update_attendance', attendance)
-            },
-            async fetch_payroll_data() {
-                let payroll = await payroll_info.json()
-                this.store.commit('add_to_payroll_data', payroll)
-            }
+        async fetch_attendance() {
+            let attendance = await attendance_info.json()
+            this.store.commit('update_attendance', attendance)
         },
-        modules: {
+        async fetch_payroll_data() {
+            let payroll = await payroll_info.json()
+            this.store.commit('add_to_payroll_data', payroll)
         }
-    })
+    },
+    modules: {
+    }
+})
