@@ -11,7 +11,7 @@
     </div>
     <div>
       <h3>Average Salary</h3>
-      <p>R{{ this.$store.getters.combinedSalaries / this.$store.state.employee_info.length }}</p>
+      <p>R{{ ($store.getters.combinedSalaries / $store.state.employee_info.length).toFixed(2) }}</p>
     </div>
     <div>
       <h3>Leave Requests</h3>
@@ -30,22 +30,6 @@ export default {
   components : {
     NavbarComp,
     FooterComp
-  },
-  data() {
-    return {
-      combined_sal : 0
-    }
-  },
-  computed : {
-    // calculate_combined_salary(){
-    //   let is_active = true;
-    //   if (is_active == true){
-    //     for (let i  = 0; i in this.$store.state.payroll_data;){
-    //       this.combined_sal += i.finalSalary
-    //     }
-    //     return this.combined_sal
-    //   }
-    // }
   }
 }
 </script>

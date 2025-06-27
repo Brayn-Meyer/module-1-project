@@ -3,6 +3,11 @@
     <div class="employee-container">
         <h1>Employee List</h1>
         <div class="top-bar">
+            <input
+                class="search-input"
+                v-model="searchQuery"
+                placeholder="Search employees..."
+            />
             <button class="add-btn" @click="add_employee_button()">+ Add Employee</button>
         </div>
         <div>
@@ -10,7 +15,7 @@
         </div>
         <div class="card-grid" ref="cards">
             <EmployeeCard
-                v-for="emp in this.$store.state.employee_info"
+                v-for="emp in filteredEmployees"
                 :key="emp.employeeId"
                 :employee="emp"
                 @view="openModal"
@@ -44,15 +49,13 @@ export default {
     data() {
         return {
             add_employee_cliked: false,
-            employees: employeeInformation,
             selectedEmployee: null,
             searchQuery: ''
         }
     },
     computed: {
         filteredEmployees() {
-            return this.employees.filter(emp => emp.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-            );
+            return this.$store.state.employee_info.filter(emp => emp.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
         }
     },
     methods: {
