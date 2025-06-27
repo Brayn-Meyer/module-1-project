@@ -3,23 +3,33 @@
     <div class="employee-container">
         <h1>Employee List</h1>
         <div class="top-bar">
-            <!-- <input type="text" v-model="searchQuery" placeholder="Search employees..." class="search-input"/> -->
             <button class="add-btn" @click="add_employee_button()">+ Add Employee</button>
         </div>
-        <div >
+        <div>
             <AddemployeeComp ref="add_employee"/>
         </div>
         <div class="card-grid" ref="cards">
-            <EmployeeCard v-for="emp in this.$store.state.employee_info" :key="emp.employeeId" :employee="emp" @view="openModal" />
+            <EmployeeCard
+                v-for="emp in this.$store.state.employee_info"
+                :key="emp.employeeId"
+                :employee="emp"
+                @view="openModal"
+                @delete="deleteEmployee"
+            />
         </div>
-        <!-- <EmployeeModal v-if="selectedEmployee" :employee="selectedEmployee" @close="selectedEmployee = null" /> -->
+        <EmployeeModal
+            v-if="selectedEmployee"
+            :employee="selectedEmployee"
+            @close="selectedEmployee = null"
+        />
     </div>
     <footer-comp/>
 </template>
+
 <script>
 import { employeeInformation } from '@/store/employee_info.json';
 import EmployeeCard from '@/components/EmployeeCard.vue';
-// import EmployeeModal from '@/components/EmployeeModal.vue';
+import EmployeeModal from '@/components/EmployeeModal.vue'; // <-- Un-comment this line
 import NavbarComp from '@/components/NavbarComp.vue';
 import FooterComp from '@/components/FooterComp.vue';
 import AddemployeeComp from '@/components/AddemployeeComp.vue'
@@ -29,7 +39,7 @@ export default {
         NavbarComp,
         FooterComp,
         AddemployeeComp,
-        // EmployeeModal
+        EmployeeModal // <-- Register here
     },
     data() {
         return {
@@ -46,10 +56,19 @@ export default {
         }
     },
     methods: {
-        add_employee_button(){
-            this.$refs.add_employee.toggle_add_employee_comp()
+    add_employee_button(){
+        this.$refs.add_employee.toggle_add_employee_comp()
+    },
+    deleteEmployee(employee) {
+        const index = this.$store.state.employee_info.findIndex(emp => emp.employeeId === employee.employeeId);
+        if (index !== -1) {
+            this.$store.commit('remove_employee', index);
         }
+    },
+    openModal(employee) {
+        this.selectedEmployee = employee;
     }
+}
 }
 </script>
 <style scoped>

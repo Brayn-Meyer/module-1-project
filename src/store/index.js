@@ -515,33 +515,54 @@ export default createStore({
                     ? emp.attendance[emp.attendance.length - 1].date
                     : ''
             }));
+        },
+        combinedSalaries: state => {
+            return state.employee_info.reduce((total, item) => total + item.salary, 0);
+        },
+        pendingLeaveRequests: state => {
+            return state.attendance.reduce((count, emp) => {
+                return count + emp.leaveRequests.filter(req => req.status === 'Pending').length;
+            }, 0);
+        },
+        approvedLeaveRequests: state => {
+            return state.attendance.reduce((count, emp) => {
+                return count + emp.leaveRequests.filter(req => req.status === 'Approved').length;
+            }, 0);
+        },
+        deniedLeaveRequests: state => {
+            return state.attendance.reduce((count, emp) => {
+                return count + emp.leaveRequests.filter(req => req.status === 'Denied').length;
+            }, 0);
         }
     },
     mutations: {
-        update_employee_info(payload) {//payload is any info
-            this.state.employee_info = payload
+        update_employee_info(payload) { //payload is any info 
+        this.state.employee_info = payload
         },
         add_to_employee_info(state, payload) {
             state.employee_info.push(payload)
         },
+        remove_employee(state, index) {
+            state.employee_info.splice(index, 1);
+        },
 
-        update_attendance(payload) {//payload is any info
+        update_attendance(payload) { //payload is any info 
             this.state.attendance = payload
         },
         add_to_attendance(state, payload) {
             state.attendance.push(payload)
         },
 
-        update_payroll_data(payload) {//payload is any info
+        update_payroll_data(payload) { //payload is any info 
             this.state.payroll_data = payload
         },
         add_to_payroll_data(payload) {
             this.state.payroll_data.push(payload)
         },
 
-        updateLeaveStatus(empIndex, reqIndex, newStatus) { //updates the status of leave requests by targeting via index
-            this.state.attendance[empIndex].leaveRequests[reqIndex].status = newStatus;
-            console.log(this.state.attendance[empIndex])
+        updateLeaveStatus(state, payload) {
+            const { empIndex, reqIndex, newStatus } = payload;
+            state.attendance[empIndex].leaveRequests[reqIndex].status = newStatus;
         }
     },
     actions: {
