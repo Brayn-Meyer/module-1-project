@@ -148,205 +148,245 @@
       </div>
     </div>
   </div>
+  <footer-comp/>
 </template>
 
 <script>
 import { ref, computed } from 'vue';
 import NavbarComp from '@/components/NavbarComp.vue';
+import FooterComp from '@/components/FooterComp.vue';
 import { useStore } from 'vuex';
 
 export default {
-    components: {
-        NavbarComp
-    },
-    setup() {
-        const store = useStore();
+  components: {
+    NavbarComp,
+    FooterComp
+  },
+  setup() {
+    const store = useStore();
 
-        // Build employees array from Vuex store
-        const employees = computed(() =>
-            store.state.employee_info.map(emp => ({
-                id: emp.employeeId,
-                name: emp.name,
-                department: emp.department
-            }))
-        );
+    // Build employees array from Vuex store
+    const employees = computed(() =>
+      store.state.employee_info.map(emp => ({
+        id: emp.employeeId,
+        name: emp.name,
+        department: emp.department
+      }))
+    );
 
-        // Build reviews array from employee_info, keeping review variables
-        const reviews = ref(
-            store.state.employee_info.map(emp => ({
-                id: emp.employeeId,
-                employeeId: emp.employeeId,
-                employeeName: emp.name,
-                department: emp.department,
-                reviewDate: '', // Default empty, user can fill in
-                rating: 3, // Default rating
-                strengths: '',
-                areasForImprovement: '',
-                goals: '',
-                status: 'Draft'
-            }))
-        );
+    // ...inside setup()...
+// Build reviews array from employee_info, keeping review variables and randomizing values
+const getRandomDate = () => {
+    const start = new Date(2025, 7, 1).getTime();
+    const end = new Date().getTime();
+    const date = new Date(start + Math.random() * (end - start));
+    return date.toISOString().split('T')[0];
+};
 
-        const searchQuery = ref('');
-        const selectedDepartment = ref('');
-        const sortField = ref('reviewDate');
-        const sortDirection = ref('desc');
-        const showReviewModal = ref(false);
-        const showDeleteModal = ref(false);
-        const editingReview = ref(null);
-        const reviewToDelete = ref(null);
+const getRandomRating = () => Math.floor(Math.random() * 5) + 1;
 
-        const form = ref({
-            employeeId: '',
-            reviewDate: new Date().toISOString().split('T')[0],
-            rating: 3,
-            strengths: '',
-            areasForImprovement: '',
-            goals: '',
-            status: 'Draft'
-        });
+const getStrengths = (rating) => {
+    if (rating >= 4) return "Consistently exceeds expectations and demonstrates strong leadership.";
+    if (rating === 3) return "Meets expectations and works well with the team.";
+    return "Needs improvement in key performance areas.";
+};
 
-        // Computed properties
-        const departments = computed(() => {
-            const depts = new Set();
-            employees.value.forEach(emp => depts.add(emp.department));
-            return Array.from(depts);
-        });
+const getAreasForImprovement = (rating) => {
+    if (rating >= 4) return "Continue current performance and mentor others.";
+    if (rating === 3) return "Could take more initiative and seek feedback.";
+    return "Should focus on time management and skill development.";
+};
 
-        const filteredReviews = computed(() => {
-            let filtered = [...reviews.value];
+const getGoals = (rating) => {
+    if (rating >= 4) return "Take on more challenging projects and lead initiatives.";
+    if (rating === 3) return "Improve consistency and expand technical skills.";
+    return "Attend training sessions and set short-term improvement goals.";
+};
 
-            // Filter by search query
-            if (searchQuery.value) {
-                const query = searchQuery.value.toLowerCase();
-                filtered = filtered.filter(review =>
-                    review.employeeName.toLowerCase().includes(query)
-                );
-            }
+const getRandomStatus = () => {
+    const statuses = ['Draft', 'Completed', 'Archived'];
+    return statuses[Math.floor(Math.random() * statuses.length)];
+};
 
-            // Filter by department
-            if (selectedDepartment.value) {
-                filtered = filtered.filter(review =>
-                    review.department === selectedDepartment.value
-                );
-            }
-
-            // Sorting
-            filtered.sort((a, b) => {
-                let modifier = sortDirection.value === 'asc' ? 1 : -1;
-                if (a[sortField.value] < b[sortField.value]) return -1 * modifier;
-                if (a[sortField.value] > b[sortField.value]) return 1 * modifier;
-                return 0;
-            });
-
-            return filtered;
-        });
-
-        // Methods
-        const formatDate = (dateString) => {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString(undefined, options);
-        };
-
-        const sortReviews = (field) => {
-            if (sortField.value === field) {
-                sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortField.value = field;
-                sortDirection.value = 'asc';
-            }
-        };
-
-        const openReviewModal = (review) => {
-            editingReview.value = review;
-            if (review) {
-                // Editing existing review
-                form.value = {
-                    employeeId: review.employeeId,
-                    reviewDate: review.reviewDate,
-                    rating: review.rating,
-                    strengths: review.strengths,
-                    areasForImprovement: review.areasForImprovement,
-                    goals: review.goals,
-                    status: review.status
-                };
-            } else {
-                // Adding new review
-                form.value = {
-                    employeeId: '',
-                    reviewDate: new Date().toISOString().split('T')[0],
-                    rating: 3,
-                    strengths: '',
-                    areasForImprovement: '',
-                    goals: '',
-                    status: 'Draft'
-                };
-            }
-            showReviewModal.value = true;
-        };
-
-        const closeModal = () => {
-            showReviewModal.value = false;
-            editingReview.value = null;
-        };
-
-        const submitReview = () => {
-            const employee = employees.value.find(emp => emp.id === parseInt(form.value.employeeId));
-
-            if (editingReview.value) {
-                // Update existing review
-                const index = reviews.value.findIndex(r => r.id === editingReview.value.id);
-                reviews.value[index] = {
-                    ...reviews.value[index],
-                    ...form.value,
-                    employeeName: employee.name,
-                    department: employee.department
-                };
-            } else {
-                // Add new review
-                const newReview = {
-                    id: Math.max(...reviews.value.map(r => r.id)) + 1,
-                    ...form.value,
-                    employeeName: employee.name,
-                    department: employee.department
-                };
-                reviews.value.push(newReview);
-            }
-
-            closeModal();
-        };
-
-        const confirmDelete = (id) => {
-            reviewToDelete.value = id;
-            showDeleteModal.value = true;
-        };
-
-        const deleteReview = () => {
-            reviews.value = reviews.value.filter(review => review.id !== reviewToDelete.value);
-            showDeleteModal.value = false;
-            reviewToDelete.value = null;
-        };
-
+const reviews = ref(
+    store.state.employee_info.map(emp => {
+        const rating = getRandomRating();
         return {
-            employees,
-            reviews,
-            searchQuery,
-            selectedDepartment,
-            departments,
-            filteredReviews,
-            showReviewModal,
-            showDeleteModal,
-            editingReview,
-            form,
-            formatDate,
-            sortReviews,
-            openReviewModal,
-            closeModal,
-            submitReview,
-            confirmDelete,
-            deleteReview
+            id: emp.employeeId,
+            employeeId: emp.employeeId,
+            employeeName: emp.name,
+            department: emp.department,
+            reviewDate: getRandomDate(),
+            rating,
+            strengths: getStrengths(rating),
+            areasForImprovement: getAreasForImprovement(rating),
+            goals: getGoals(rating),
+            status: getRandomStatus()
         };
-    }
+    })
+);
+// ...rest of setup()...
+
+    const searchQuery = ref('');
+    const selectedDepartment = ref('');
+    const sortField = ref('reviewDate');
+    const sortDirection = ref('desc');
+    const showReviewModal = ref(false);
+    const showDeleteModal = ref(false);
+    const editingReview = ref(null);
+    const reviewToDelete = ref(null);
+
+    const form = ref({
+      employeeId: '',
+      reviewDate: new Date().toISOString().split('T')[0],
+      rating: 3,
+      strengths: '',
+      areasForImprovement: '',
+      goals: '',
+      status: 'Draft'
+    });
+
+    // Computed properties
+    const departments = computed(() => {
+      const depts = new Set();
+      employees.value.forEach(emp => depts.add(emp.department));
+      return Array.from(depts);
+    });
+
+    const filteredReviews = computed(() => {
+      let filtered = [...reviews.value];
+
+      // Filter by search query
+      if (searchQuery.value) {
+        const query = searchQuery.value.toLowerCase();
+        filtered = filtered.filter(review =>
+          review.employeeName.toLowerCase().includes(query)
+        );
+      }
+
+      // Filter by department
+      if (selectedDepartment.value) {
+        filtered = filtered.filter(review =>
+          review.department === selectedDepartment.value
+        );
+      }
+
+      // Sorting
+      filtered.sort((a, b) => {
+        let modifier = sortDirection.value === 'asc' ? 1 : -1;
+        if (a[sortField.value] < b[sortField.value]) return -1 * modifier;
+        if (a[sortField.value] > b[sortField.value]) return 1 * modifier;
+        return 0;
+      });
+
+      return filtered;
+    });
+
+    // Methods
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    const sortReviews = (field) => {
+      if (sortField.value === field) {
+        sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortField.value = field;
+        sortDirection.value = 'asc';
+      }
+    };
+
+    const openReviewModal = (review) => {
+      editingReview.value = review;
+      if (review) {
+        // Editing existing review
+        form.value = {
+          employeeId: review.employeeId,
+          reviewDate: review.reviewDate,
+          rating: review.rating,
+          strengths: review.strengths,
+          areasForImprovement: review.areasForImprovement,
+          goals: review.goals,
+          status: review.status
+        };
+      } else {
+        // Adding new review
+        form.value = {
+          employeeId: '',
+          reviewDate: new Date().toISOString().split('T')[0],
+          rating: 3,
+          strengths: '',
+          areasForImprovement: '',
+          goals: '',
+          status: 'Draft'
+        };
+      }
+      showReviewModal.value = true;
+    };
+
+    const closeModal = () => {
+      showReviewModal.value = false;
+      editingReview.value = null;
+    };
+
+    const submitReview = () => {
+      const employee = employees.value.find(emp => emp.id === parseInt(form.value.employeeId));
+
+      if (editingReview.value) {
+        // Update existing review
+        const index = reviews.value.findIndex(r => r.id === editingReview.value.id);
+        reviews.value[index] = {
+          ...reviews.value[index],
+          ...form.value,
+          employeeName: employee.name,
+          department: employee.department
+        };
+      } else {
+        // Add new review
+        const newReview = {
+          id: Math.max(...reviews.value.map(r => r.id)) + 1,
+          ...form.value,
+          employeeName: employee.name,
+          department: employee.department
+        };
+        reviews.value.push(newReview);
+      }
+
+      closeModal();
+    };
+
+    const confirmDelete = (id) => {
+      reviewToDelete.value = id;
+      showDeleteModal.value = true;
+    };
+
+    const deleteReview = () => {
+      reviews.value = reviews.value.filter(review => review.id !== reviewToDelete.value);
+      showDeleteModal.value = false;
+      reviewToDelete.value = null;
+    };
+
+    return {
+      employees,
+      reviews,
+      searchQuery,
+      selectedDepartment,
+      departments,
+      filteredReviews,
+      showReviewModal,
+      showDeleteModal,
+      editingReview,
+      form,
+      formatDate,
+      sortReviews,
+      openReviewModal,
+      closeModal,
+      submitReview,
+      confirmDelete,
+      deleteReview
+    };
+  }
 };
 </script>
 

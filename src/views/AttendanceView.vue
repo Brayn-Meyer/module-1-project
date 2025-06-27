@@ -60,8 +60,6 @@
         </div>
     </div>
     <div>
-        <!-- <EmployeeCard v-for="employer in $store.state.employee_info" :info="employer"/> -->
-        <attendance-card :info="employee" />
 
     </div>
 
@@ -80,7 +78,9 @@ export default {
 
     name: 'Attendance',
     data() {
+        const masterDate = '2025-07-27';
         return {
+            masterDate,
             attendanceAndLeave: [
                 {
                     "employeeId": 1,
@@ -429,13 +429,10 @@ export default {
                 }
             ].map(emp => ({
                 ...emp,
-                currentDate: emp.attendance && emp.attendance.length > 0
-                    ? emp.attendance[emp.attendance.length - 1].date
-                    : ''
+                currentDate: masterDate
             })),
             searchQuery: '',
             selectedDate: '',
-            masterDate: '',
             availableDates: []
 
         };
