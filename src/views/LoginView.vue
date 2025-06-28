@@ -6,7 +6,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <form action="/home" method="t">
+        <form action="/dashboard" method="t">
             <div class="imgcontainer">
                 <img src="@/assets/file_00000000c01861fdbdca8264e6d26d80.png" alt="logo" class="logo">
                 <h1>Welcome To ModernTech Solutions</h1>

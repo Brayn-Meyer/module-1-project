@@ -148,13 +148,14 @@
       </div>
     </div>
   </div>
-  <footer-comp/>
+  <footer-comp />
 </template>
 
 <script>
 import { ref, computed } from 'vue';
 import NavbarComp from '@/components/NavbarComp.vue';
 import FooterComp from '@/components/FooterComp.vue';
+import { onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
@@ -174,58 +175,66 @@ export default {
       }))
     );
 
-    // ...inside setup()...
-// Build reviews array from employee_info, keeping review variables and randomizing values
-const getRandomDate = () => {
-    const start = new Date(2025, 7, 1).getTime();
-    const end = new Date().getTime();
-    const date = new Date(start + Math.random() * (end - start));
-    return date.toISOString().split('T')[0];
-};
 
-const getRandomRating = () => Math.floor(Math.random() * 5) + 1;
+    // Commit reviews to Vuex on mount and whenever reviews change
+    onMounted(() => {
+      store.commit('set_performance_reviews', reviews.value);
+    });
+    watch(reviews, (newVal) => {
+      store.commit('set_performance_reviews', newVal);
+    }, { deep: true });
 
-const getStrengths = (rating) => {
-    if (rating >= 4) return "Consistently exceeds expectations and demonstrates strong leadership.";
-    if (rating === 3) return "Meets expectations and works well with the team.";
-    return "Needs improvement in key performance areas.";
-};
+    // Build reviews array from employee_info, keeping review variables and randomizing values
+    const getRandomDate = () => {
+      const start = new Date(2025, 7, 1).getTime();
+      const end = new Date().getTime();
+      const date = new Date(start + Math.random() * (end - start));
+      return date.toISOString().split('T')[0];
+    };
 
-const getAreasForImprovement = (rating) => {
-    if (rating >= 4) return "Continue current performance and mentor others.";
-    if (rating === 3) return "Could take more initiative and seek feedback.";
-    return "Should focus on time management and skill development.";
-};
+    const getRandomRating = () => Math.floor(Math.random() * 5) + 1;
 
-const getGoals = (rating) => {
-    if (rating >= 4) return "Take on more challenging projects and lead initiatives.";
-    if (rating === 3) return "Improve consistency and expand technical skills.";
-    return "Attend training sessions and set short-term improvement goals.";
-};
+    const getStrengths = (rating) => {
+      if (rating >= 4) return "Consistently exceeds expectations and demonstrates strong leadership.";
+      if (rating === 3) return "Meets expectations and works well with the team.";
+      return "Needs improvement in key performance areas.";
+    };
 
-const getRandomStatus = () => {
-    const statuses = ['Draft', 'Completed', 'Archived'];
-    return statuses[Math.floor(Math.random() * statuses.length)];
-};
+    const getAreasForImprovement = (rating) => {
+      if (rating >= 4) return "Continue current performance and mentor others.";
+      if (rating === 3) return "Could take more initiative and seek feedback.";
+      return "Should focus on time management and skill development.";
+    };
 
-const reviews = ref(
-    store.state.employee_info.map(emp => {
+    const getGoals = (rating) => {
+      if (rating >= 4) return "Take on more challenging projects and lead initiatives.";
+      if (rating === 3) return "Improve consistency and expand technical skills.";
+      return "Attend training sessions and set short-term improvement goals.";
+    };
+
+    const getRandomStatus = () => {
+      const statuses = ['Draft', 'Completed', 'Archived'];
+      return statuses[Math.floor(Math.random() * statuses.length)];
+    };
+
+    const reviews = ref(
+      store.state.employee_info.map(emp => {
         const rating = getRandomRating();
         return {
-            id: emp.employeeId,
-            employeeId: emp.employeeId,
-            employeeName: emp.name,
-            department: emp.department,
-            reviewDate: getRandomDate(),
-            rating,
-            strengths: getStrengths(rating),
-            areasForImprovement: getAreasForImprovement(rating),
-            goals: getGoals(rating),
-            status: getRandomStatus()
+          id: emp.employeeId,
+          employeeId: emp.employeeId,
+          employeeName: emp.name,
+          department: emp.department,
+          reviewDate: getRandomDate(),
+          rating,
+          strengths: getStrengths(rating),
+          areasForImprovement: getAreasForImprovement(rating),
+          goals: getGoals(rating),
+          status: getRandomStatus()
         };
-    })
-);
-// ...rest of setup()...
+      })
+    );
+    // ...rest of setup()...
 
     const searchQuery = ref('');
     const selectedDepartment = ref('');
