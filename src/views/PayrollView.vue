@@ -61,32 +61,34 @@
                 <input type="text" placeholder="Filter payrolls..." class="search-input" v-model="payrollFilter"
                     @input="filterPayrolls">
             </div>
-            <table class="payroll-table">
-                <thead>
-                    <tr>
-                        <th @click="sortPayrolls('name')">Name</th>
-                        <th @click="sortPayrolls('position')">Position</th>
-                        <th @click="sortPayrolls('hourlyRate')">Hourly Rate</th>
-                        <th @click="sortPayrolls('hoursWorked')">Hours Worked</th>
-                        <th @click="sortPayrolls('leaveDeductions')">Leave Deductions</th>
-                        <th @click="sortPayrolls('finalSalary')">Final Salary</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(employee, index) in filteredPayrollData" :key="index">
-                        <td>{{ employee.name }}</td>
-                        <td>{{ employee.position }}</td>
-                        <td>R{{ employee.hourlyRate.toFixed(2) }}</td>
-                        <td>{{ employee.hoursWorked }}</td>
-                        <td>R{{ employee.leaveDeductions.toFixed(2) }}</td>
-                        <td>R{{ calculateSalary(employee).toFixed(2) }}</td>
-                        <td>
-                            <button class="table-btn view-btn" @click="viewPayslip(employee)">View Payslip</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-scroll">
+                <table class="payroll-table">
+                    <thead>
+                        <tr>
+                            <th @click="sortPayrolls('name')">Name</th>
+                            <th @click="sortPayrolls('position')">Position</th>
+                            <th @click="sortPayrolls('hourlyRate')">Hourly Rate</th>
+                            <th @click="sortPayrolls('hoursWorked')">Hours Worked</th>
+                            <th @click="sortPayrolls('leaveDeductions')">Leave Deductions</th>
+                            <th @click="sortPayrolls('finalSalary')">Final Salary</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(employee, index) in filteredPayrollData" :key="index">
+                            <td>{{ employee.name }}</td>
+                            <td>{{ employee.position }}</td>
+                            <td>R{{ employee.hourlyRate.toFixed(2) }}</td>
+                            <td>{{ employee.hoursWorked }}</td>
+                            <td>R{{ employee.leaveDeductions.toFixed(2) }}</td>
+                            <td>R{{ calculateSalary(employee).toFixed(2) }}</td>
+                            <td>
+                                <button class="table-btn view-btn" @click="viewPayslip(employee)">View Payslip</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="pagination" v-if="totalPages > 1">
                 <button v-for="page in totalPages" :key="page" @click="currentPage = page"
                     :class="{ active: currentPage === page }">
@@ -338,62 +340,26 @@ export default {
 </script>
 
 <style scoped>
-
 .dashboard-container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
     max-width: 1200px;
-    margin: 20px auto; /* Center horizontally */
+    margin: 20px auto;
+    /* Center horizontally */
     background-color: white;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center children horizontally */
-    justify-content: center; /* Center children vertically if you want full viewport height */
-    min-height: 100vh; /* Optional: full viewport height */
+    align-items: center;
+    /* Center children horizontally */
 }
 
 .sections-wrapper {
     display: flex;
     gap: 20px;
     margin-bottom: 30px;
-    justify-content: center; /* Center horizontally */
-    align-items: flex-start;
-    width: 100%;
-}
-
-.payroll-section {
-    margin-top: 20px;
-    background: linear-gradient(to bottom, #ffffff, #f5efeb);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
-    width: 100%;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center content inside */
-}
-
-h1, h2 {
-    text-align: center;
-    width: 100%;
-}
-
-.table-controls {
-    display: flex;
     justify-content: center;
-    margin-bottom: 15px;
-    align-items: center;
-    gap: 10px;
+    /* Center horizontally */
     width: 100%;
-}
-
-.payroll-table {
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .calculator-section,
@@ -409,6 +375,12 @@ h1, h2 {
     background: linear-gradient(to bottom, #ffffff, #f5efeb);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     height: 85%
+}
+
+h1,
+h2 {
+    text-align: center;
+    width: 100%;
 }
 
 h1 {
@@ -496,6 +468,14 @@ h2 {
     padding: 20px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center content inside */
 }
 
 .payroll-table {
@@ -552,13 +532,15 @@ h2 {
 /* Table Controls */
 .table-controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 15px;
     align-items: center;
+    gap: 10px;
+    width: 100%;
 }
 
 .export-btn {
-   background-color: #0b2545;
+    background-color: #0b2545;
     width: auto;
     padding: 8px 16px;
 }
@@ -580,7 +562,7 @@ h2 {
 }
 
 .view-btn {
-   background-color: #0b2545;
+    background-color: #0b2545;
     color: white;
 }
 
@@ -610,7 +592,7 @@ h2 {
 }
 
 .pagination button.active {
-  background-color: #0b2545;
+    background-color: #0b2545;
     border-color: #567c8d;
 }
 
@@ -653,6 +635,12 @@ h2 {
         width: 100%;
     }
 
+    .payroll-table {
+        min-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .payroll-table th,
     .payroll-table td {
         padding: 8px;
@@ -669,7 +657,14 @@ h2 {
     .management-border {
         padding: 15px;
     }
-    
+
+    .table-scroll {
+        width: 100%;
+        overflow-x: auto;
+        display: flex;
+        justify-content: center;
+    }
+
     .payslip-container {
         padding: 15px;
     }
@@ -687,18 +682,6 @@ h2 {
     .payslip-actions button {
         width: 100%;
     }
-}
-
-@media (max-width: 425px) {
-  .payroll-section {
-    overflow-x: auto;
-    width: 100%;
-  }
-  .payroll-table {
-    overflow-x: auto;
-    width: 100%;
-    min-width: 600px;
-  }
 }
 
 /* New styles for payslip modal only */

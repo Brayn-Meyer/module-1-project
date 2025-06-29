@@ -401,23 +401,30 @@ export default {
 <style scoped>
 .performance-review-container {
   max-width: 1200px;
-  margin: 30px;
+  margin: 30px auto; /* Center horizontally */
   padding: 30px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5efeb;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children horizontally */
 }
 
 h1 {
   color: #0b2545;
   margin-bottom: 20px;
   font-weight: 600;
+  text-align: center;
+  width: 100%;
 }
 
 .controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center controls */
   align-items: center;
   margin-bottom: 20px;
+  width: 100%;
+  gap: 20px;
 }
 
 .search-filter {
@@ -462,6 +469,15 @@ h1 {
   box-shadow: 0 2px 10px rgba(47, 65, 86, 0.1);
   overflow: hidden;
   border: 1px solid #e0e8ee;
+  margin: 0 auto; /* Center table */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.reviews-table table {
+  min-width: 600px;
+  margin: 0 auto;
 }
 
 table {

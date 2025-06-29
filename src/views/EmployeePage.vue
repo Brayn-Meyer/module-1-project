@@ -3,11 +3,6 @@
     <div class="employee-container">
         <h1>Employee List</h1>
         <div class="top-bar">
-            <!-- <input
-                class="search-input"
-                v-model="searchQuery"
-                placeholder="Search employees..."
-            /> -->
             <button class="add-btn" @click="add_employee_button()">+ Add Employee</button>
         </div>
         <div>
