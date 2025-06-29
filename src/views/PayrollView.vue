@@ -338,19 +338,62 @@ export default {
 </script>
 
 <style scoped>
-/* Your original styles remain completely unchanged */
+
 .dashboard-container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
     max-width: 1200px;
-    margin: 0 auto;
-    background-color: #f8fafc;
+    margin: 20px auto; /* Center horizontally */
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center children horizontally */
+    justify-content: center; /* Center children vertically if you want full viewport height */
+    min-height: 100vh; /* Optional: full viewport height */
 }
 
 .sections-wrapper {
     display: flex;
     gap: 20px;
     margin-bottom: 30px;
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start;
+    width: 100%;
+}
+
+.payroll-section {
+    margin-top: 20px;
+    background: linear-gradient(to bottom, #ffffff, #f5efeb);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content inside */
+}
+
+h1, h2 {
+    text-align: center;
+    width: 100%;
+}
+
+.table-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.payroll-table {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .calculator-section,
@@ -363,26 +406,30 @@ export default {
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 20px;
-    background-color: white;
+    background: linear-gradient(to bottom, #ffffff, #f5efeb);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     height: 85%
 }
 
 h1 {
-    color: #1e293b;
+    color: #0b2545;
     font-size: 24px;
     margin-bottom: 20px;
     font-weight: 600;
 }
 
 h2 {
-    color: #1e293b;
+    color: #0b2545;
     font-size: 20px;
     margin-top: 0;
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid #f1f5f9;
     font-weight: 600;
+    background: linear-gradient(to right, #0b2545, #8da9c4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .management-option {
@@ -391,6 +438,7 @@ h2 {
     background-color: white;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
+    background: linear-gradient(to bottom, #ffffff, #f5efeb);
 }
 
 .management-option:last-child {
@@ -399,7 +447,7 @@ h2 {
 
 .management-option h3 {
     margin-top: 0;
-    color: #334155;
+    color: #0b2545;
     font-size: 16px;
     margin-bottom: 12px;
     font-weight: 500;
@@ -407,7 +455,7 @@ h2 {
 
 .search-input,
 .employee-select {
-    width: 100%;
+    width: 90%;
     padding: 10px 12px;
     margin-bottom: 12px;
     border: 1px solid #cbd5e1;
@@ -420,12 +468,12 @@ h2 {
 .search-input:focus,
 .employee-select:focus {
     outline: none;
-    border-color: #4361ee;
-    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+    border-color: #567c8d;
+    box-shadow: 0 0 0 2px rgba(86, 124, 141, 0.1);
 }
 
 .action-btn {
-    background-color: #4361ee;
+    background-color: #0b2545;
     color: white;
     border: none;
     padding: 10px 16px;
@@ -433,17 +481,17 @@ h2 {
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
     width: 100%;
 }
 
 .action-btn:hover {
-    background-color: #3a56d4;
+    background: linear-gradient(to bottom, #dacdbb, #b1a19f);
 }
 
 .payroll-section {
     margin-top: 20px;
-    background-color: white;
+    background: linear-gradient(to bottom, #ffffff, #f5efeb);
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -465,15 +513,15 @@ h2 {
 }
 
 .payroll-table th {
-    background-color: #f8fafc;
-    color: #475569;
+    background-color: #0b2545;
+    color: white;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .payroll-table th:hover {
-    background-color: #f1f5f9;
+    background: linear-gradient(to bottom, #dad7b6, #d5cdbf);
 }
 
 .payroll-table tr:nth-child(even) {
@@ -510,13 +558,13 @@ h2 {
 }
 
 .export-btn {
-    background-color: #10b981;
+   background-color: #0b2545;
     width: auto;
     padding: 8px 16px;
 }
 
 .export-btn:hover {
-    background-color: #0d9f6e;
+    background: linear-gradient(to bottom, #cfccc5, #d8d6bc);
 }
 
 /* Button Styles */
@@ -532,12 +580,12 @@ h2 {
 }
 
 .view-btn {
-    background-color: #4361ee;
+   background-color: #0b2545;
     color: white;
 }
 
 .view-btn:hover {
-    background-color: #3a56d4;
+    background: linear-gradient(to bottom, #d7d7d0, #cfcbba);
 }
 
 /* Pagination */
@@ -562,9 +610,8 @@ h2 {
 }
 
 .pagination button.active {
-    background-color: #4361ee;
-    color: white;
-    border-color: #4361ee;
+  background-color: #0b2545;
+    border-color: #567c8d;
 }
 
 /* Status Indicators */
@@ -622,6 +669,36 @@ h2 {
     .management-border {
         padding: 15px;
     }
+    
+    .payslip-container {
+        padding: 15px;
+    }
+
+    .employee-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .payslip-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .payslip-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 425px) {
+  .payroll-section {
+    overflow-x: auto;
+    width: 100%;
+  }
+  .payroll-table {
+    overflow-x: auto;
+    width: 100%;
+    min-width: 600px;
+  }
 }
 
 /* New styles for payslip modal only */
@@ -639,7 +716,7 @@ h2 {
 }
 
 .payslip-container {
-    background-color: white;
+    background: linear-gradient(to bottom, #ffffff, #f5efeb);
     padding: 30px;
     border-radius: 8px;
     max-width: 800px;
@@ -658,9 +735,13 @@ h2 {
 }
 
 .payslip-header h2 {
-    color: #4361ee;
+    color: #2f4156;
     margin: 0;
     font-size: 24px;
+    background: linear-gradient(to right, #0b2545, #8da9c4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .company-info {
@@ -669,7 +750,7 @@ h2 {
 
 .company-info h3 {
     margin: 0 0 5px 0;
-    color: #333;
+    color: #2f4156;
 }
 
 .employee-info {
@@ -677,7 +758,7 @@ h2 {
     justify-content: space-between;
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #f8fafc;
+    background: linear-gradient(to bottom, #f5efeb, #c8d9e6);
     border-radius: 6px;
 }
 
@@ -694,7 +775,6 @@ h2 {
 .payslip-table td {
     padding: 10px;
     border: 1px solid #e2e8f0;
-
 }
 
 .payslip-table tr:nth-child(even) {
@@ -707,7 +787,7 @@ h2 {
     font-weight: bold;
     margin: 20px 0;
     padding-top: 10px;
-    border-top: 2px solid #4361ee;
+    border-top: 2px solid #567c8d;
 }
 
 .payslip-footer {
@@ -745,26 +825,6 @@ h2 {
 
     .payslip-actions {
         display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .payslip-container {
-        padding: 15px;
-    }
-
-    .employee-info {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .payslip-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .payslip-actions button {
-        width: 100%;
     }
 }
 </style>

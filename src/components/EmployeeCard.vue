@@ -41,92 +41,131 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: #f5fbfe;
+    background-color: white;
     border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s;
-    border: 1px solid #075576;
-    gap: 20px;
+    padding: 1.8rem;
+    box-shadow: 0 6px 20px rgba(47, 65, 86, 0.12);
+    transition: all 0.3s ease;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .employee-card:hover {
-    transform: scale(1.01);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(86, 124, 141, 0.2);
+}
+
+.employee-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #0b2545, #8da9c4);
 }
 
 .card-header {
     display: flex;
-    gap: 1rem;
+    gap: 1.2rem;
     align-items: flex-start;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .initials {
-    background-color: #075576;
+    background-color: rgb(208, 203, 203);
     color: white;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 8px rgba(47, 65, 86, 0.15);
 }
 
 .main-info h2 {
-    margin: 0 0 0.5rem;
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    justify-content: center;
-    align-items: center;
+    margin: 0 0 0.8rem;
+    font-size: 1.3rem;
+    color: #2f4156;
+    font-weight: 600;
 }
 
 .main-info p {
-    margin: 0.25rem 0;
+    margin: 0.3rem 0;
     font-size: 0.95rem;
-    color: #444;
+    color: #567c8d;
 }
 
 .subtitle {
-    margin: 4px 0;
-    color: #555;
+    margin: 6px 0;
+    color: #567c8d;
     font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.subtitle strong {
+    color: #2f4156;
+    font-weight: 600;
 }
 
 .actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.8rem;
     margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(200, 217, 230, 0.5);
 }
 
 button {
-    padding: 0.5rem 1rem;
-    border-radius: 2px;
-    font-weight: bold;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
     border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-    opacity: 0.85;
-    transform: scale(1.02);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .view {
-    background-color: #075576;
+    background-color: #0b2545;
     color: white;
 }
 
 .edit {
-    background-color: #a0bacc;
+    background-color: #0b2545;
     color: white;
 }
 
 .delete {
-    background-color: #ef233c;
+    background-color: #d32d2d;
     color: white;
+}
+
+@media (max-width: 480px) {
+    .employee-card {
+        padding: 1.2rem;
+    }
+    
+    .actions {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    
+    .initials {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+    }
 }
 </style>

@@ -3,10 +3,9 @@
 
     <div class="attendance-container">
         <div class="controls">
-            <h2>Employee Attendance</h2>
-            <div>
+            <h2><i class="fas fa-clipboard-check"></i> Employee Attendance</h2>
+            <div class="search-container">
                 <input type="text" v-model="searchQuery" class="search-box" placeholder="Search employees...">
-
             </div>
         </div>
 
@@ -22,14 +21,14 @@
                     <th>Employee</th>
                     <th>Department</th>
                     <th>Date</th>
-                    <th>✅ Status</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(employee, index) in filteredEmployees" :key="employee.employeeId">
                     <td>{{ index + 1 }}</td>
                     <td class="employee-cell">
-                        <div class="avatar" :style="{ backgroundColor: getAvatarColor(employee.name) }">
+                        <div class="avatar" :style="{ background: getAvatarGradient(employee.name) }">
                             {{ getInitials(employee.name) }}
                         </div>
                         {{ employee.name }}
@@ -50,12 +49,16 @@
 
         <div class="legend">
             <div class="legend-item">
-                <div class="legend-color" style="background-color: #27ae60;"></div>
+                <div class="legend-color present"></div>
                 <span>Present</span>
             </div>
             <div class="legend-item">
-                <div class="legend-color" style="background-color:#e52b2b;"></div>
+                <div class="legend-color absent"></div>
                 <span>Absent</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color unknown"></div>
+                <span>Unknown</span>
             </div>
         </div>
     </div>
@@ -87,9 +90,15 @@ export default {
         };
     },
     methods: {
-        getAvatarColor(name) {
-            // Simple color hash
-            return '#3498db';
+        getAvatarGradient(name) {
+            const colors = [
+                'linear-gradient(135deg, #567c8d 0%, #3a506b 100%)',
+                'linear-gradient(135deg, #2f4156 0%, #4a6fa5 100%)',
+                'linear-gradient(135deg, #4361ee 0%, #3f37c9 100%)',
+                'linear-gradient(135deg, #3a506b 0%, #567c8d 100%)'
+            ];
+            const hash = name.split('').reduce((acc, char) => char.charCodeAt(0) + acc, 0);
+            return colors[hash % colors.length];
         },
         getInitials(name) {
             return name.split(' ').map(n => n[0]).join('');
@@ -135,145 +144,265 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 .attendance-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    background-color: rgb(238, 234, 226);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    max-width: 1200px;
+    margin: 2rem auto;
+    background: linear-gradient(to bottom, #ffffff 0%, #f5efeb 100%);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(47, 65, 86, 0.12);
+    padding: 2rem;
+    border: 1px solid #c8d9e6;
 }
 
 h2 {
-    color: #2c3e50;
-    margin-top: 0;
+    color: #0b2545;
+    margin: 0;
+    font-size: 1.6rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.75rem;
+    background: linear-gradient(to right, transparent 0%, rgba(245, 239, 235, 0.6) 20%, transparent 100%);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(86, 124, 141, 0.1);
 }
 
 th {
-    background-color: #133c58;
-    color: white;
-    padding: 12px 15px;
-    text-align: left;
-    font-weight: 600;
+    background-color: #0b2545;
+    color: #f5efeb;
+    padding: 1.1rem;
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+th:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #c8d9e6 0%, #f5efeb 100%);
 }
 
 td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 1.1rem;
+    border-bottom: 1px solid #e0e7ed;
     vertical-align: middle;
+    color: #2f4156;
+    background: white;
+    transition: all 0.25s ease;
 }
 
-tr:hover {
-    background-color: #f8f9fa;
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: linear-gradient(to right, #ffffff 0%, #f8fafc 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(86, 124, 141, 0.1);
 }
 
 .avatar {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: bold;
-    margin-right: 10px;
+    margin-right: 0.75rem;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .employee-cell {
     display: flex;
     align-items: center;
+    font-weight: 500;
 }
 
 .present {
     color: #27ae60;
-    font-weight: 600;
-    background-color: #e8f5e9;
-    padding: 5px 10px;
-    border-radius: 4px;
+    font-weight: 500;
+    background: linear-gradient(to right, rgba(39, 174, 96, 0.1) 0%, rgba(46, 204, 113, 0.1) 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    border: 1px solid rgba(39, 174, 96, 0.3);
 }
 
 .absent {
     color: #e52b2b;
-    font-weight: 600;
-    background-color: #ffebee;
-    padding: 5px 10px;
-    border-radius: 4px;
+    font-weight: 500;
+    background: linear-gradient(to right, rgba(229, 43, 43, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    border: 1px solid rgba(229, 43, 43, 0.3);
 }
 
 .unknown {
-    color: #999;
-    font-weight: 600;
-    background-color: #f4f4f4;
-    padding: 5px 10px;
-    border-radius: 4px;
+    color: #567c8d;
+    font-weight: 500;
+    background: linear-gradient(to right, rgba(86, 124, 141, 0.1) 0%, rgba(192, 214, 223, 0.1) 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    border: 1px solid rgba(86, 124, 141, 0.3);
 }
 
-
 .date-input {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #d6e3f0;
+    border-radius: 6px;
     font-family: inherit;
+    background: white;
+    color: #2f4156;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #567c8d;
+    box-shadow: 0 0 0 3px rgba(86, 124, 141, 0.2);
 }
 
 .controls {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
     align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
 .search-box {
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 200px;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid #d6e3f0;
+    border-radius: 6px;
+    width: 280px;
+    background: white;
+    color: #2f4156;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.date-filter {
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-left: 10px;
+.search-box:focus {
+    outline: none;
+    border-color: #567c8d;
+    box-shadow: 0 0 0 3px rgba(86, 124, 141, 0.2);
 }
 
 .legend {
     display: flex;
-    gap: 20px;
-    margin-top: 20px;
-    font-size: 14px;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.6rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.7);
 }
 
 .legend-color {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.legend-color.present {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+.legend-color.absent {
+    background: linear-gradient(135deg, #e52b2b 0%, #ff6b6b 100%);
+}
+
+.legend-color.unknown {
+    background: linear-gradient(135deg, #567c8d 0%, #7a9cc6 100%);
 }
 
 .master-date-control {
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 1rem;
+    background: linear-gradient(to right, #f5efeb 0%, #ffffff 50%, #f5efeb 100%);
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    border-left: 4px solid #0b2545;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .master-date-label {
-    font-weight: 600;
-    color: #2c3e50;
+    font-weight: 500;
+    color: #2f4156;
+    font-size: 0.95rem;
 }
+
+.attendance-cards-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .attendance-cards-container {
+        grid-template-columns: 1fr;
+        padding: 0 0.5rem;
+    }
+    
+    .master-date-control {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 </style>

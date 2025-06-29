@@ -152,10 +152,9 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import NavbarComp from '@/components/NavbarComp.vue';
 import FooterComp from '@/components/FooterComp.vue';
-import { onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
@@ -175,16 +174,7 @@ export default {
       }))
     );
 
-
-    // Commit reviews to Vuex on mount and whenever reviews change
-    onMounted(() => {
-      store.commit('set_performance_reviews', reviews.value);
-    });
-    watch(reviews, (newVal) => {
-      store.commit('set_performance_reviews', newVal);
-    }, { deep: true });
-
-    // Build reviews array from employee_info, keeping review variables and randomizing values
+    // Helper functions
     const getRandomDate = () => {
       const start = new Date(2025, 7, 1).getTime();
       const end = new Date().getTime();
@@ -217,6 +207,7 @@ export default {
       return statuses[Math.floor(Math.random() * statuses.length)];
     };
 
+    // Declare reviews BEFORE using it in onMounted/watch
     const reviews = ref(
       store.state.employee_info.map(emp => {
         const rating = getRandomRating();
@@ -234,8 +225,16 @@ export default {
         };
       })
     );
-    // ...rest of setup()...
 
+    // Commit reviews to Vuex on mount and whenever reviews change
+    onMounted(() => {
+      store.commit('set_performance_reviews', reviews.value);
+    });
+    watch(reviews, (newVal) => {
+      store.commit('set_performance_reviews', newVal);
+    }, { deep: true });
+
+    // Form and UI state
     const searchQuery = ref('');
     const selectedDepartment = ref('');
     const sortField = ref('reviewDate');
@@ -402,14 +401,16 @@ export default {
 <style scoped>
 .performance-review-container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 30px;
+  padding: 30px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5efeb;
 }
 
 h1 {
-  color: #2c3e50;
+  color: #0b2545;
   margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .controls {
@@ -424,34 +425,43 @@ h1 {
   gap: 15px;
 }
 
-.search-input,
-.department-select {
+.search-input, .department-select {
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #c8d9e6;
   border-radius: 4px;
   font-size: 14px;
+  background-color: #ffffff;
+  color: #2f4156;
+}
+
+.search-input::placeholder {
+  color: #a8b9c6;
 }
 
 .add-review-btn {
-  background-color: #4361ee;
+  background: linear-gradient(135deg, #0b2545, #8da9c4);
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(47, 65, 86, 0.1);
 }
 
 .add-review-btn:hover {
-  background-color: #3a56d4;
+  background: linear-gradient(135deg, #e9dee2, #a9989a);
+  box-shadow: 0 4px 8px rgba(47, 65, 86, 0.2);
 }
 
 .reviews-table {
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgba(47, 65, 86, 0.1);
   overflow: hidden;
+  border: 1px solid #e0e8ee;
 }
 
 table {
@@ -459,37 +469,35 @@ table {
   border-collapse: collapse;
 }
 
-th,
-td {
+th, td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e0e8ee;
 }
 
 th {
-  background-color: #f8f9fa;
-  color: #495057;
+  background-color: #0b2545;
+  color: white;
   font-weight: 600;
   cursor: pointer;
   user-select: none;
 }
 
 th:hover {
-  background-color: #e9ecef;
+background-color: #567c8d;
 }
 
 tr:hover {
-  background-color: #f8f9fa;
+  background-color: #f8fafc;
 }
 
-.rating-display,
-.rating-input {
+.rating-display, .rating-input {
   display: flex;
   gap: 2px;
 }
 
 .star {
-  color: #ddd;
+  color: #d6e4f0;
   font-size: 18px;
   cursor: pointer;
 }
@@ -499,78 +507,81 @@ tr:hover {
 }
 
 .status-badge {
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
+  display: inline-block;
 }
 
 .status-badge.Draft {
-  background-color: #fff3bf;
+  background: linear-gradient(135deg, #fff3bf, #ffe69e);
   color: #e67700;
 }
 
 .status-badge.Completed {
-  background-color: #d3f9d8;
+  background: linear-gradient(135deg, #d3f9d8, #b2f2bb);
   color: #2b8a3e;
 }
 
 .status-badge.Archived {
-  background-color: #e9ecef;
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
   color: #495057;
 }
 
 .action-btn {
-  padding: 6px 12px;
+  padding: 8px 14px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 13px;
-  margin-right: 5px;
+  margin-right: 8px;
   transition: all 0.2s;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .edit-btn {
-  background-color: #15aabf;
+ background-color: #0b2545;
   color: white;
 }
 
 .edit-btn:hover {
-  background-color: #1098ad;
+  background: #8da9c4;
 }
 
 .delete-btn {
-  background-color: #fa5252;
+  background-color: #b82323;
   color: white;
 }
 
 .delete-btn:hover {
-  background-color: #e03131;
+  background: linear-gradient(135deg, #fa5252, #ff6b6b);
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(47, 65, 86, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(2px);
 }
 
-.review-modal,
-.confirmation-modal {
+.review-modal, .confirmation-modal {
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 25px rgba(47, 65, 86, 0.2);
   width: 90%;
   max-width: 700px;
   max-height: 90vh;
   overflow-y: auto;
+  border: 1px solid #d6e4f0;
 }
 
 .modal-header {
@@ -578,20 +589,32 @@ tr:hover {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e0e8ee;
+  background: linear-gradient(to right, #0b2545, #8da9c4);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .modal-header h2 {
   margin: 0;
-  color: #2c3e50;
+  color: #ffffff;
+  font-size: 1.4rem;
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 28px;
   cursor: pointer;
-  color: #6c757d;
+  color: #567c8d;
+  transition: color 0.2s;
+  line-height: 1;
+  padding: 0 8px;
+}
+
+.close-btn:hover {
+  color: #2f4156;
 }
 
 .modal-body {
@@ -606,16 +629,24 @@ tr:hover {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #495057;
+  color: #2f4156;
 }
 
-.form-input,
-.form-textarea {
+.form-input, .form-textarea {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
+  padding: 10px 12px;
+  border: 1px solid #d6e4f0;
   border-radius: 4px;
   font-size: 14px;
+  color: #2f4156;
+  background-color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #567c8d;
+  box-shadow: 0 0 0 2px rgba(86, 124, 141, 0.1);
 }
 
 .form-textarea {
@@ -623,83 +654,125 @@ tr:hover {
   resize: vertical;
 }
 
-.form-actions,
-.modal-actions {
+.form-actions, .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
   margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e8ee;
 }
 
 .cancel-btn {
-  background-color: #e9ecef;
-  color: #495057;
-  border: none;
-  padding: 8px 16px;
+ background-color: #0b2545;
+  color: #ffffff;
+  border: 1px solid #d6e4f0;
+  padding: 10px 18px;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #e6eef5;
+  border-color: #c8d9e6;
 }
 
 .submit-btn {
-  background-color: #4361ee;
+ background-color: #0b2545;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(47, 65, 86, 0.1);
 }
 
 .submit-btn:hover {
-  background-color: #3a56d4;
+  background: linear-gradient(135deg, #e3dde0, #ccc1c3);
+  box-shadow: 0 4px 8px rgba(47, 65, 86, 0.2);
 }
 
 .confirmation-modal {
-  padding: 20px;
+  padding: 25px;
   text-align: center;
 }
 
 .confirmation-modal h3 {
   margin-top: 0;
-  color: #2c3e50;
+  color: #2f4156;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
 }
 
-/* Responsive Design */
+.confirmation-modal p {
+  color: #567c8d;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.modal-actions {
+  justify-content: center;
+  border-top: none;
+  padding-top: 0;
+}
+
 @media (max-width: 768px) {
   .controls {
     flex-direction: column;
     gap: 15px;
-    align-items: flex-start;
+    align-items: stretch;
   }
-
+  
   .search-filter {
-    width: 100%;
     flex-direction: column;
     gap: 10px;
   }
-
-  .search-input,
-  .department-select {
+  
+  .search-input, .department-select, .add-review-btn {
     width: 100%;
   }
-
-  .add-review-btn {
-    width: 100%;
-  }
-
-  th,
-  td {
-    padding: 8px;
+  
+  th, td {
+    padding: 10px;
     font-size: 14px;
   }
-
+  
   .action-btn {
     display: block;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
-
+  
   .review-modal {
     width: 95%;
+    max-height: 85vh;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.2rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .cancel-btn, .submit-btn, .delete-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 425px) {
+  .reviews-table {
+    overflow-x: auto;
+    width: 100%;
+  }
+  .reviews-table table {
+    min-width: 600px;
   }
 }
 </style>

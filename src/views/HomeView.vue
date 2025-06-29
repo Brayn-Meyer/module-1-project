@@ -1,16 +1,15 @@
 <template>
   <div class="dashboard-container">
-    <navbar-comp class="navbar" />
-
+    <navbar-comp class="navbar"/>
+    
     <main class="dashboard-content">
       <h2 class="dashboard-title">Company Dashboard</h2>
-
+      
       <div class="stats-grid">
         <!-- Employee Count Card -->
-        <div class="stat-card">
+        <div class="stat-card employee-count">
           <div class="stat-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
               <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -20,11 +19,11 @@
           <h3>Total Employees</h3>
           <p class="stat-value">{{ $store.state.employee_info.length }}</p>
         </div>
+
         <!-- Combined Salary Card -->
-        <div class="stat-card">
+        <div class="stat-card combined-salary">
           <div class="stat-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="1" x2="12" y2="23"></line>
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
@@ -32,24 +31,23 @@
           <h3>Combined Salary</h3>
           <p class="stat-value">R{{ $store.getters.combinedSalaries.toLocaleString() }}</p>
         </div>
+
         <!-- Average Salary Card -->
-        <div class="stat-card">
+        <div class="stat-card average-salary">
           <div class="stat-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="1" x2="12" y2="23"></line>
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
           </div>
           <h3>Average Salary</h3>
-          <p class="stat-value">R{{ ($store.getters.combinedSalaries /
-            $store.state.employee_info.length).toLocaleString(undefined, { maximumFractionDigits: 2 }) }}</p>
+          <p class="stat-value">R{{ ($store.getters.combinedSalaries / $store.state.employee_info.length).toLocaleString(undefined, {maximumFractionDigits: 2}) }}</p>
         </div>
+
         <!-- Leave Requests Card -->
         <div class="stat-card leave-requests">
           <div class="stat-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
               <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -75,8 +73,6 @@
       </div>
     </main>
     <main class="dashboard-content">
-      <!-- ...existing stats grid... -->
-
       <div class="charts-grid" style="display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 2rem;">
         <div style="flex: 1; min-width: 350px;">
           <LineChart :chartData="attendanceChartData" :chartOptions="attendanceChartOptions" />
@@ -204,7 +200,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f8fafc;
+ background-color: #ffffff;
 }
 
 .navbar {
@@ -216,47 +212,64 @@ export default {
 .dashboard-content {
   flex: 1;
   padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .dashboard-title {
   text-align: center;
-  color: #1e293b;
+  color:   #0b2545;
   margin-bottom: 2.5rem;
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
 .stat-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+ background-color: #ffffff;
+  border-radius: 6px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(47, 65, 86, 0.12);
+  transition: all 0.3s ease;
+  border: 1px solid  #0b2545;
+  position: relative;
+  overflow: hidden;
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(86, 124, 141, 0.2);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #0b2545, #8da9c4);
 }
 
 .stat-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  background-color: #e0f2fe;
-  color: #0369a1;
-  margin-bottom: 1rem;
+  border: 1px solid #0b2545;
+  background: linear-gradient(135deg, rgba(200, 217, 230, 0.3) 0%, rgba(86, 124, 141, 0.3) 100%);
+  color: #2f4156;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px rgba(47, 65, 86, 0.1);
 }
 
 .stat-icon svg {
@@ -265,35 +278,55 @@ export default {
 }
 
 .stat-card h3 {
-  color: #64748b;
-  font-size: 1rem;
+  color: #0b2545;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.5px;
 }
 
 .stat-value {
-  color: #1e293b;
-  font-size: 1.75rem;
+  color: #0b2545;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
 }
 
+/* Card Specific Gradients */
+.employee-count .stat-icon {
+  background: linear-gradient(135deg, rgba(200, 217, 230, 0.3) 0%, rgba(86, 124, 141, 0.4) 100%);
+}
+
+.combined-salary .stat-icon {
+  background: linear-gradient(135deg, rgba(200, 217, 230, 0.3) 0%, rgba(245, 239, 235, 0.4) 100%);
+}
+
+.average-salary .stat-icon {
+  background: linear-gradient(135deg, rgba(200, 217, 230, 0.3) 0%, rgba(47, 65, 86, 0.4) 100%);
+}
+
+.leave-requests .stat-icon {
+  background: linear-gradient(135deg, rgba(200, 217, 230, 0.3) 0%, rgba(239, 35, 133, 0.2) 100%);
+}
+
 /* Leave Requests Specific Styles */
 .leave-requests {
-  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .leave-stats {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .leave-stat {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(200, 217, 230, 0.5);
 }
 
 .leave-stat:last-child {
@@ -301,7 +334,8 @@ export default {
 }
 
 .leave-stat span:first-child {
-  color: #64748b;
+  color: #567c8d;
+  font-weight: 500;
 }
 
 .leave-stat span:last-child {
@@ -325,12 +359,38 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
   .dashboard-content {
     padding: 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-card {
+    padding: 1.5rem;
+  }
+  
+  .stat-value {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 1.6rem;
+  }
+  
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
   }
 }
 </style>
