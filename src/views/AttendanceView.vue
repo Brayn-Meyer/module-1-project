@@ -126,7 +126,7 @@ export default {
     },
     computed: {
         attendanceAndLeave() {
-            // Merge attendance with department from employee_info
+           
             return this.$store.state.attendance.map(att => {
                 const empInfo = this.$store.state.employee_info.find(e => e.employeeId === att.employeeId) || {};
                 return {

@@ -226,7 +226,7 @@ export default {
       })
     );
 
-    // Commit reviews to Vuex on mount and whenever reviews change
+    
     onMounted(() => {
       store.commit('set_performance_reviews', reviews.value);
     });

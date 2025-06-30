@@ -1,31 +1,33 @@
 <template>
-  <div class="wrapper">
-    <form @submit.prevent="handleLogin">
-      <div class="imgcontainer">
-        <img src="@/assets/modernTech.png" alt="logo" class="logo">
-        <h1>Welcome To ModernTech Solutions</h1>
+  <div class="logo-container">
+    <div class="main-wrapper">
+      <!-- Logo Side -->
+      <div class="side-logo">
+        <img src="@/assets/modernTech.png" alt="logo" class="main-logo" />
       </div>
-
-      <div class="container">
-        <label for="uname"><b>Username:</b></label>
-        <input type="text" v-model="username" placeholder="Enter Username" name="uname" required>
-
-        <label for="psw"><b>Password:</b></label>
-        <input type="password" v-model="password" placeholder="Enter Password" name="psw" required>
-
-        <button type="submit">Login</button><br>
-        <label>
-          <input type="checkbox" v-model="remember" name="remember"> Remember me
-        </label>
-        <h4>ModernTech / Solutions</h4>
-        <div v-if="error" class="error-msg">{{ error }}</div>
+      <!-- Form Side -->
+      <div class="wrapper animate">
+        <form @submit.prevent="handleLogin">
+          <div class="form-header">
+            <h1>Welcome To ModernTech Solutions</h1>
+          </div>
+          <div class="container">
+            <label for="uname"><b>Username:</b></label>
+            <input type="text" placeholder="Enter Username" name="uname" v-model="username" required />
+            <label for="psw"><b>Password:</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" v-model="password" required />
+            <button type="submit" class="loginbtn">Login</button><br />
+            <h4>ModernTech / Solutions</h4>
+            <label>
+              <input type="checkbox" checked="checked" name="remember" /> Remember me </label>
+          </div>
+          <div class="container bottom-container">
+            <button type="button" class="cancelbtn">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+          </div>
+        </form>
       </div>
-
-      <div class="container bottom-container">
-        <button type="button" class="cancelbtn" @click="resetForm">Cancel</button>
-        <span class="psw">Forgot <a href="#">password?</a></span>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 <script>
@@ -62,150 +64,157 @@ export default {
 };
 </script>
 <style scoped>
-body {
-    background: linear-gradient(135deg, #8da9c4 0%, #f5efeb 100%);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+.logo-container {
+  background-image: url(https://media.istockphoto.com/id/984453214/photo/baby-blue-hand-painted-backdrop.jpg?s=612x612&w=0&k=20&c=DaDL638BRZulVu9uibPGQlEPbB-6COqmXoEw44va8Nc=);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-wrapper {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  width: 800px;
+  max-width: 95%;
+  animation: slideFadeIn 1s ease forwards;
 }
 
+.side-logo {
+  background-color: #0b2545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  width: 50%;
+}
+.main-logo {
+  width: 100%;
+  max-width: 250px;
+  animation: bounceFadeIn 1.2s ease-in-out;
+}
+/* Form Side */
 .wrapper {
-    width: 400px;
-    margin: 40px auto;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(11, 37, 69, 0.08);
-    overflow: hidden;
-    padding-bottom: 1rem;
+  width: 50%;
+  padding: 30px;
+  background-color: #ffffff;
+}
+.form-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+h1 {
+  font-size: 22px;
+  color: #0b2545;
 }
 form {
-    border: none;
+  padding: 0;
 }
-
-
-input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #8da9c4;
-    box-sizing: border-box;
-    border-radius: 6px;
-    background: #f5efeb;
-    font-size: 1rem;
-    color: #0b2545;
-}
-
-input[type="text"]:focus, input[type="password"]:focus {
-    border-color: #0b2545;
-    outline: none;
-    background: #fff;
-}
-
-
-button {
-    background: linear-gradient(135deg, #0b2545, #8da9c4);
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 50%;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: background 0.3s, transform 0.2s;
-}
-
-button:hover {
-    background: #364fc7;
-    transform: translateY(-2px);
-    opacity: 0.95;
-}
-
-
-.cancelbtn {
-    width: auto;
-    padding: 10px 18px;
-    background-color: #ff2200;
-}
-
-.imgcontainer {
-    text-align: center;
-    margin-top: 2rem;
-}
-
-
-.logo {
-    width: 180px;
-    height: auto;
-    margin-bottom: 1rem;
-}
-
-
 .container {
-    padding: 24px;
+  padding: 0;
 }
-
-h1 {
-    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
-    color: #0b2545;
-    margin-bottom: 1rem;
-    font-size: 2rem;
-    text-shadow: 1px 1px 2px rgba(141, 169, 196, 0.2);
+input[type='text'],
+input[type='password'] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #0b2545;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: 0.3s;
 }
-
+input[type='text']:focus,
+input[type='password']:focus {
+  border-color: #8da9c4;
+  outline: none;
+}
+button.loginbtn {
+  background: linear-gradient(135deg, #0b2545, #8da9c4);
+  color: #ffffff;
+  padding: 12px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  transition: 0.3s;
+}
+button.loginbtn:hover {
+  background: linear-gradient(135deg, #8da9c4, #0b2545);
+  transform: scale(1.02);
+}
+.cancelbtn {
+  padding: 10px 20px;
+  background-color: #e61a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.cancelbtn:hover {
+  background-color: #b71c1c;
+}
+input[type='checkbox'] {
+  accent-color: #319227;
+}
 .bottom-container {
-    background-color: #e0e8ee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    border-radius: 0 0 12px 12px;
+  background-color: #0b2545;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  color: white;
 }
-
-input[type="checkbox"] {
-    accent-color: #0b2545;
+span.psw a {
+  color: white;
+  text-decoration: underline;
 }
-
-
-span.psw {
-    float: right;
-    padding-top: 16px;
-    color: #0b2545;
-    font-size: 0.95rem;
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-
-@media screen and (max-width: 500px) {
-    .wrapper {
-        width: 95%;
-        margin: 20px auto;
-        padding-bottom: 0.5rem;
-    }
-    .container {
-        padding: 12px;
-    }
-    .logo {
-        width: 120px;
-    }
-    h1 {
-        font-size: 1.3rem;
-    }
-    .bottom-container {
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px;
-    }
-    button, .cancelbtn {
-        width: 100%;
-    }
-    span.psw {
-        float: none;
-        padding-top: 8px;
-        text-align: center;
-        display: block;
-    }
+@keyframes bounceFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-30px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) translateY(10px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+/* Responsive Layout */
+@media screen and (max-width: 768px) {
+  .main-wrapper {
+    flex-direction: column;
+  }
+  .wrapper,
+  .side-logo {
+    width: 100%;
+  }
+  .side-logo {
+    padding: 20px;
+  }
+  .main-logo {
+    max-width: 180px;
+  }
 }
 </style>

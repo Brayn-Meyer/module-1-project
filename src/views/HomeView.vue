@@ -103,7 +103,7 @@ export default {
   computed: {
     // Attendance Line Chart Data
     attendanceChartData() {
-      // Flatten all attendance records and group by date
+     
       const attendance = this.$store.state.attendance;
       const dateMap = {};
       attendance.forEach(emp => {
@@ -146,8 +146,7 @@ export default {
     },
 
     performancePieData() {
-      // Use actual review data if available, otherwise simulate
-      // Replace this with your actual reviews array if you have one
+      
       const reviews = this.$store.state.employee_info.map(emp => ({
         name: emp.name,
         rating: emp.rating || Math.floor(Math.random() * 5) + 1
@@ -292,7 +291,7 @@ export default {
   margin: 0;
 }
 
-/* Card Specific Gradients */
+/* Card Gradients */
 .employee-count .stat-icon {
   background: linear-gradient(135deg, rgba(200, 217, 230, 0.3) 0%, rgba(86, 124, 141, 0.4) 100%);
 }

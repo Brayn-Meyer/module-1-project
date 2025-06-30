@@ -85,7 +85,7 @@ export default {
 }
 </script>
 <style scoped>
-/* Compact Card Container */
+
 .compact-leave-card {
   background: #ffffff;
   border-radius: 10px;

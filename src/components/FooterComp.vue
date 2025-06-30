@@ -35,7 +35,7 @@ b{
     padding: 0 20px;
 }
 
-/* Responsive design */
+
 @media (max-width: 768px) {
     .footer {
         padding: 15px 0;

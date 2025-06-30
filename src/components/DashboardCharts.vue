@@ -17,10 +17,10 @@ export default {
     const chartCanvas = ref(null);
 
     onMounted(() => {
-      // Register Chart.js components
+      
       Chart.register(...registerables);
 
-      // Dummy HR data - department distribution
+      
       const hrData = {
         departments: [
           { name: "Engineering", employees: 42, color: "#4361ee" },
@@ -33,12 +33,11 @@ export default {
         totalEmployees: 142
       };
 
-      // Prepare data for Chart.js
       const labels = hrData.departments.map(dept => dept.name);
       const data = hrData.departments.map(dept => dept.employees);
       const backgroundColors = hrData.departments.map(dept => dept.color);
 
-      // Create the doughnut chart
+      
       new Chart(chartCanvas.value, {
         type: 'doughnut',
         data: {
