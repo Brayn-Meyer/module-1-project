@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(employee, index) in filteredEmployees" :key="employee.employeeId">
+                <tr v-for="(employee, index) in filteredEmployees" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td class="employee-cell">
                         <div class="avatar" :style="{ background: getAvatarGradient(employee.name) }">
@@ -35,12 +35,12 @@
                     </td>
                     <td>{{ employee.department || 'General' }}</td>
                     <td>
-                        <input type="date" v-model="employee.currentDate" class="date-input employee-date"
-                            @change="updateMasterDateIfUniform">
+                        <input type="date" :value="formatDate(employee.date)" @change="updateDate($event, employee)"
+                            class="date-input employee-date" />
                     </td>
                     <td>
-                        <span :class="getStatusClass(employee)">
-                            {{ getCurrentStatus(employee) }}
+                        <span :class="getStatusClass(employee.status)">
+                            {{ employee.status }}
                         </span>
                     </td>
                 </tr>
@@ -71,11 +71,9 @@
 <script>
 import FooterComp from '@/components/FooterComp.vue';
 import NavbarComp from '@/components/NavbarComp.vue';
-import AttendanceCard from '@/components/AttendanceCard.vue';
 export default {
     components: {
         NavbarComp,
-        AttendanceCard,
         FooterComp
     },
 
@@ -90,27 +88,33 @@ export default {
         };
     },
     methods: {
-        getAvatarGradient(name) {
-            const colors = [
-                'linear-gradient(135deg, #567c8d 0%, #3a506b 100%)',
-                'linear-gradient(135deg, #2f4156 0%, #4a6fa5 100%)',
-                'linear-gradient(135deg, #4361ee 0%, #3f37c9 100%)',
-                'linear-gradient(135deg, #3a506b 0%, #567c8d 100%)'
-            ];
-            const hash = name.split('').reduce((acc, char) => char.charCodeAt(0) + acc, 0);
-            return colors[hash % colors.length];
+        getStatusClass(status) {
+            switch (status?.toLowerCase()) {
+                case 'present':
+                    return 'status present';
+                case 'absent':
+                    return 'status absent';
+                case 'leave':
+                    return 'status leave';
+                default:
+                    return 'status unknown';
+            }
+        },
+        capitalizeStatus(status) {
+            if (!status) return 'Unknown';
+            return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
         },
         getInitials(name) {
-            return name.split(' ').map(n => n[0]).join('');
+            return name?.split(" ").map(n => n[0]).join("").toUpperCase();
         },
-        getStatusClass(employee) {
-            const status = this.getCurrentStatus(employee);
-            if (status === 'Present') return 'present';
-            if (status === 'Absent') return 'absent';
-            return 'unknown';
+        getAvatarGradient(name) {
+            // Simple gradient generator
+            const colors = ["#4f46e5", "#6366f1", "#3b82f6"];
+            const index = name.length % colors.length;
+            return `linear-gradient(135deg, ${colors[index]}, #a5b4fc)`;
         },
         getCurrentStatus(employee) {
-            if (employee.attendance && employee.attendance.length > 0) {
+            if (Array.isArray(employee.attendance)) {
                 const record = employee.attendance.find(a => a.date === employee.currentDate);
                 return record ? record.status : 'Unknown';
             }
@@ -122,24 +126,37 @@ export default {
                 emp.currentDate = this.masterDate;
             });
         },
-        formatDate(date) { return date; }
+        formatDate(date) {
+            if (!date) return '';
+            return new Date(date).toISOString().split('T')[0]; // "2025-07-27"
+        },
+        updateDate(event, employee) {
+            employee.date = event.target.value;
+        }
     },
     computed: {
         attendanceAndLeave() {
-           
+            if (!Array.isArray(this.$store.state.attendance)) return [];
             return this.$store.state.attendance.map(att => {
-                const empInfo = this.$store.state.employee_info.find(e => e.employeeId === att.employeeId) || {};
+                const empInfo = this.$store.state.employee_info?.find(e => e.employeeId === att.employeeId) || {};
+
                 return {
                     ...att,
+                    name: empInfo.name || 'Unknown',
                     department: empInfo.department || 'General',
-                    currentDate: this.masterDate
+                    currentDate: this.masterDate,
+                    attendance: att.attendance || [] // ensure it's an array
                 };
             });
         },
         filteredEmployees() {
-            return this.attendanceAndLeave.filter(emp =>
-                emp.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-            );
+            const map = new Map();
+            this.$store.state.attendance.forEach(entry => {
+                if (!map.has(entry.name) || new Date(entry.date) > new Date(map.get(entry.name).date)) {
+                    map.set(entry.name, entry);
+                }
+            });
+            return Array.from(map.values());
         }
     }
 }
@@ -231,7 +248,7 @@ tr:hover td {
     font-weight: bold;
     margin-right: 0.75rem;
     font-size: 0.95rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .employee-cell {
@@ -240,7 +257,7 @@ tr:hover td {
     font-weight: 500;
 }
 
-.present {
+.status.present {
     color: #27ae60;
     font-weight: 500;
     background: linear-gradient(to right, rgba(39, 174, 96, 0.1) 0%, rgba(46, 204, 113, 0.1) 100%);
@@ -250,7 +267,7 @@ tr:hover td {
     border: 1px solid rgba(39, 174, 96, 0.3);
 }
 
-.absent {
+.status.absent {
     color: #e52b2b;
     font-weight: 500;
     background: linear-gradient(to right, rgba(229, 43, 43, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
@@ -260,7 +277,7 @@ tr:hover td {
     border: 1px solid rgba(229, 43, 43, 0.3);
 }
 
-.unknown {
+.status.unknown {
     color: #567c8d;
     font-weight: 500;
     background: linear-gradient(to right, rgba(86, 124, 141, 0.1) 0%, rgba(192, 214, 223, 0.1) 100%);
@@ -279,7 +296,7 @@ tr:hover td {
     color: #2f4156;
     font-size: 0.95rem;
     transition: all 0.25s ease;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .date-input:focus {
@@ -306,7 +323,7 @@ tr:hover td {
     color: #2f4156;
     font-size: 0.95rem;
     transition: all 0.25s ease;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .search-box:focus {
@@ -329,14 +346,14 @@ tr:hover td {
     gap: 0.6rem;
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .legend-color {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .legend-color.present {
@@ -360,7 +377,7 @@ tr:hover td {
     padding: 0.8rem 1.2rem;
     border-radius: 8px;
     border-left: 4px solid #0b2545;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .master-date-label {
@@ -383,21 +400,21 @@ tr:hover td {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .search-box {
         width: 100%;
     }
-    
+
     table {
         display: block;
         overflow-x: auto;
     }
-    
+
     .attendance-cards-container {
         grid-template-columns: 1fr;
         padding: 0 0.5rem;
     }
-    
+
     .master-date-control {
         flex-direction: column;
         align-items: flex-start;

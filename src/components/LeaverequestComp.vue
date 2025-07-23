@@ -5,7 +5,7 @@
         <div class="avatar">{{ getInitials(info.name) }}</div>
         <div>
           <h3>{{ info.name }}</h3>
-          <p>{{ info.leaveRequests.length }} leave request(s)</p>
+          <p>{{ info.length }} leave request(s)</p>
         </div>
       </div>
       <div class="status-summary">
@@ -50,13 +50,13 @@ export default {
   },
   computed: {
     pendingCount() {
-      return this.info.leaveRequests.filter(r => r.status === 'Pending').length
+      return this.info.filter(r => r.status === 'Pending').length
     },
     approvedCount() {
-      return this.info.leaveRequests.filter(r => r.status === 'Approved').length
+      return this.info.filter(r => r.status === 'Approved').length
     },
     deniedCount() {
-      return this.info.leaveRequests.filter(r => r.status === 'Denied').length
+      return this.info.filter(r => r.status === 'Denied').length
     }
   },
   methods: {

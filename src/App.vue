@@ -5,7 +5,10 @@
 <script>
   export default {
     mounted() {
-      // this.$store.dispatch('fetch_employee_info'),
+      this.$store.dispatch("fetch_employee_info")
+      this.$store.dispatch("fetch_payroll_info")
+      this.$store.dispatch("fetch_attendance_info")
+      this.$store.dispatch("fetch_leave_request_info")
       // this.$store.dispatch('fetch_attendance'),
       // this.$store.dispatch('fetch_payroll_data')
       // this.$store.commit('update_to_leave_requests')
@@ -35,4 +38,5 @@ nav a {
 nav a.router-link-exact-active {
   color: #ff2200;
 }
+
 </style>

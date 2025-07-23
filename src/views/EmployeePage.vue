@@ -11,7 +11,7 @@
         <div class="card-grid" ref="cards">
             <EmployeeCard
                 v-for="emp in this.$store.state.employee_info"
-                :key="emp.employeeId"
+                :key="emp.id"
                 :employee="emp"
                 @view="openModal"
                 @delete="deleteEmployee"
@@ -55,6 +55,9 @@ export default {
             return this.employees.filter(emp => 
                 emp.name.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
+        },
+        getEmployees() {
+            return this.$store.state.employee_info
         }
     },
     methods: {
@@ -66,7 +69,7 @@ export default {
                 emp => emp.employeeId === employee.employeeId
             );
             if (index !== -1) {
-                this.$store.commit('remove_employee', index);
+                this.$store.dispatch("remove_employee", employee.employeeId);
             }
         },
         openModal(employee) {

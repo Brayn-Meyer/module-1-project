@@ -78,10 +78,10 @@
                         <tr v-for="(employee, index) in filteredPayrollData" :key="index">
                             <td>{{ employee.name }}</td>
                             <td>{{ employee.position }}</td>
-                            <td>R{{ employee.hourlyRate.toFixed(2) }}</td>
+                            <td>R{{ employee.hourlyRate }}</td>
                             <td>{{ employee.hoursWorked }}</td>
-                            <td>R{{ employee.leaveDeductions.toFixed(2) }}</td>
-                            <td>R{{ calculateSalary(employee).toFixed(2) }}</td>
+                            <td>R{{ employee.leaveDeductions }}</td>
+                            <td>R{{ employee.finalSalary }}</td>
                             <td>
                                 <button class="table-btn view-btn" @click="viewPayslip(employee)">View Payslip</button>
                             </td>
@@ -201,21 +201,27 @@ export default {
     },
     computed: {
         employees() {
-            // Combine employee_info and payroll_data from the store
-            return this.$store.state.employee_info.map(emp => {
-                const payroll = this.$store.state.payroll_data.find(p => p.employeeId === emp.employeeId) || {};
-                const hourlyRate = emp.salary ? emp.salary / (payroll.hoursWorked || 160) : 0;
-                const originalLeaveDeductions = payroll.leaveDeductions || 0;
+            return this.$store.state.payroll_data.map(payroll => {
+                const hourlyRate = payroll.finalSalary / payroll.hoursWorked
+                const leaveDeductions = hourlyRate * 8 * payroll.leaveDeductions
+                const finalSalary = payroll.finalSalary - leaveDeductions
+
+                const attendanceRecord = this.$store.state.attendance.find(
+                    a => a.employeeId === payroll.employeeId
+                );
+
+                const recentStatus = attendanceRecord?.attendance?.at(-1)?.status || 'Unknown';
+
                 return {
-                    id: emp.employeeId,
-                    name: emp.name,
-                    position: emp.position,
-                    hourlyRate: hourlyRate,
-                    hoursWorked: payroll.hoursWorked || 0,
-                    leaveDeductions: hourlyRate * 8 * originalLeaveDeductions,
-                    finalSalary: payroll.finalSalary || 0,
-                    department: emp.department || '',
-                    status: '' // You can add status if needed from attendance
+                    id: payroll.employeeId,
+                    name: payroll.name || '',
+                    position: payroll.position || '',
+                    department: payroll.department || '',
+                    hourlyRate: hourlyRate.toFixed(2),
+                    hoursWorked: payroll.hoursWorked,
+                    leaveDeductions: leaveDeductions.toFixed(2),
+                    finalSalary: finalSalary.toFixed(2),
+                    status: recentStatus
                 };
             });
         },
